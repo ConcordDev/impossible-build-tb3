@@ -1,0 +1,523 @@
+{
+ "constants": {
+  "air_density_kgm3": 1.225,
+  "aux_load_kw": 0.4,
+  "depth_of_discharge": 0.9,
+  "glider_mass_kg": 260,
+  "gravity_ms2": 9.81,
+  "payload_kg": 550
+ },
+ "requirements": {
+  "grade_percent": 24,
+  "grade_speed_kmh": 25,
+  "max_gross_mass_kg": 1420,
+  "max_total_cost_usd": 14200,
+  "min_launch_accel_ms2": 2.2,
+  "min_launch_accel_towing_ms2": 1.6,
+  "min_range_km": 232,
+  "min_top_speed_kmh": 125,
+  "min_top_speed_towing_kmh": 105
+ },
+ "slots": {
+  "battery": [
+   {
+    "cost_usd": 4550,
+    "id": "BT-1",
+    "mass_kg": 158,
+    "max_cont_c": 2.2,
+    "name": "Pack 26.0 V96",
+    "nameplate_kwh": 26.0,
+    "voltage_class": "V96"
+   },
+   {
+    "cost_usd": 5775,
+    "id": "BT-2",
+    "mass_kg": 200,
+    "max_cont_c": 2.0,
+    "name": "Pack 33.0 V96",
+    "nameplate_kwh": 33.0,
+    "voltage_class": "V96"
+   },
+   {
+    "cost_usd": 7650,
+    "id": "BT-3",
+    "mass_kg": 240,
+    "max_cont_c": 1.8,
+    "name": "Pack 44.0 V96",
+    "nameplate_kwh": 44.0,
+    "voltage_class": "V96"
+   },
+   {
+    "cost_usd": 4200,
+    "id": "BT-4",
+    "mass_kg": 145,
+    "max_cont_c": 2.6,
+    "name": "Pack 24.0 V144",
+    "nameplate_kwh": 24.0,
+    "voltage_class": "V144"
+   },
+   {
+    "cost_usd": 5250,
+    "id": "BT-5",
+    "mass_kg": 182,
+    "max_cont_c": 2.2,
+    "name": "Pack 30.0 V144",
+    "nameplate_kwh": 30.0,
+    "voltage_class": "V144"
+   },
+   {
+    "cost_usd": 7620,
+    "id": "BT-6",
+    "mass_kg": 234,
+    "max_cont_c": 1.9,
+    "name": "Pack 44.2 V144",
+    "nameplate_kwh": 44.2,
+    "voltage_class": "V144"
+   },
+   {
+    "cost_usd": 8900,
+    "id": "BT-7",
+    "mass_kg": 295,
+    "max_cont_c": 1.7,
+    "name": "Pack 46.0 V144",
+    "nameplate_kwh": 46.0,
+    "voltage_class": "V144"
+   },
+   {
+    "cost_usd": 3500,
+    "id": "BT-8",
+    "mass_kg": 121,
+    "max_cont_c": 2.8,
+    "name": "Pack 20.0 V96",
+    "nameplate_kwh": 20.0,
+    "voltage_class": "V96"
+   }
+  ],
+  "chassis": [
+   {
+    "cda_m2": 0.66,
+    "cg_rear_fraction": 0.54,
+    "cost_usd": 1400,
+    "id": "CH-A",
+    "mass_kg": 118,
+    "name": "Cityframe Lite"
+   },
+   {
+    "cda_m2": 0.64,
+    "cg_rear_fraction": 0.55,
+    "cost_usd": 1700,
+    "id": "CH-B",
+    "mass_kg": 132,
+    "name": "Cityframe Std"
+   },
+   {
+    "cda_m2": 0.55,
+    "cg_rear_fraction": 0.53,
+    "cost_usd": 2350,
+    "id": "CH-C",
+    "mass_kg": 141,
+    "name": "Aero Utility"
+   },
+   {
+    "cda_m2": 0.68,
+    "cg_rear_fraction": 0.57,
+    "cost_usd": 1950,
+    "id": "CH-D",
+    "mass_kg": 168,
+    "name": "CargoMax Steel"
+   },
+   {
+    "cda_m2": 0.67,
+    "cg_rear_fraction": 0.56,
+    "cost_usd": 2900,
+    "id": "CH-E",
+    "mass_kg": 149,
+    "name": "CargoMax Alu"
+   },
+   {
+    "cda_m2": 0.685,
+    "cg_rear_fraction": 0.52,
+    "cost_usd": 1250,
+    "id": "CH-F",
+    "mass_kg": 104,
+    "name": "MicroDeck"
+   },
+   {
+    "cda_m2": 0.6,
+    "cg_rear_fraction": 0.56,
+    "cost_usd": 2650,
+    "id": "CH-G",
+    "mass_kg": 155,
+    "name": "Aero Cargo"
+   }
+  ],
+  "cooling": [
+   {
+    "cost_usd": 240,
+    "heat_rejection_kw": 2.6,
+    "id": "CL-1",
+    "mass_kg": 8,
+    "name": "Air Basic"
+   },
+   {
+    "cost_usd": 360,
+    "heat_rejection_kw": 4.2,
+    "id": "CL-2",
+    "mass_kg": 11,
+    "name": "Air Plus"
+   },
+   {
+    "cost_usd": 520,
+    "heat_rejection_kw": 5.8,
+    "id": "CL-3",
+    "mass_kg": 14,
+    "name": "Liquid Std"
+   },
+   {
+    "cost_usd": 700,
+    "heat_rejection_kw": 7.8,
+    "id": "CL-4",
+    "mass_kg": 18,
+    "name": "Liquid Plus"
+   },
+   {
+    "cost_usd": 980,
+    "heat_rejection_kw": 9.8,
+    "id": "CL-5",
+    "mass_kg": 24,
+    "name": "Liquid Max"
+   },
+   {
+    "cost_usd": 170,
+    "heat_rejection_kw": 1.8,
+    "id": "CL-6",
+    "mass_kg": 6,
+    "name": "Air Mini"
+   },
+   {
+    "cost_usd": 1250,
+    "heat_rejection_kw": 12.0,
+    "id": "CL-7",
+    "mass_kg": 29,
+    "name": "Liquid Ultra"
+   }
+  ],
+  "gearbox": [
+   {
+    "cost_usd": 520,
+    "efficiency": 0.96,
+    "id": "GB-1",
+    "mass_kg": 14,
+    "max_input_torque_nm": 260,
+    "name": "Reducer 6.2",
+    "ratio": 6.2
+   },
+   {
+    "cost_usd": 560,
+    "efficiency": 0.95,
+    "id": "GB-2",
+    "mass_kg": 15,
+    "max_input_torque_nm": 310,
+    "name": "Reducer 7.8",
+    "ratio": 7.8
+   },
+   {
+    "cost_usd": 640,
+    "efficiency": 0.94,
+    "id": "GB-3",
+    "mass_kg": 17,
+    "max_input_torque_nm": 320,
+    "name": "Reducer 9.6",
+    "ratio": 9.6
+   },
+   {
+    "cost_usd": 720,
+    "efficiency": 0.93,
+    "id": "GB-4",
+    "mass_kg": 19,
+    "max_input_torque_nm": 320,
+    "name": "Reducer 11.8",
+    "ratio": 11.8
+   },
+   {
+    "cost_usd": 470,
+    "efficiency": 0.97,
+    "id": "GB-5",
+    "mass_kg": 12,
+    "max_input_torque_nm": 200,
+    "name": "Reducer 5.1",
+    "ratio": 5.1
+   },
+   {
+    "cost_usd": 690,
+    "efficiency": 0.95,
+    "id": "GB-6",
+    "mass_kg": 18,
+    "max_input_torque_nm": 380,
+    "name": "Reducer 8.9 HD",
+    "ratio": 8.9
+   },
+   {
+    "cost_usd": 760,
+    "efficiency": 0.94,
+    "id": "GB-7",
+    "mass_kg": 18,
+    "max_input_torque_nm": 350,
+    "name": "Reducer 10.7",
+    "ratio": 10.7
+   }
+  ],
+  "inverter": [
+   {
+    "cost_usd": 640,
+    "eff_factor": 0.97,
+    "id": "IN-1",
+    "mass_kg": 6,
+    "max_cont_power_kw": 28,
+    "name": "Inverter 28 V96",
+    "voltage_class": "V96"
+   },
+   {
+    "cost_usd": 820,
+    "eff_factor": 0.98,
+    "id": "IN-2",
+    "mass_kg": 8,
+    "max_cont_power_kw": 40,
+    "name": "Inverter 40 V96",
+    "voltage_class": "V96"
+   },
+   {
+    "cost_usd": 760,
+    "eff_factor": 0.98,
+    "id": "IN-3",
+    "mass_kg": 6,
+    "max_cont_power_kw": 34,
+    "name": "Inverter 34 V144",
+    "voltage_class": "V144"
+   },
+   {
+    "cost_usd": 990,
+    "eff_factor": 0.99,
+    "id": "IN-4",
+    "mass_kg": 9,
+    "max_cont_power_kw": 48,
+    "name": "Inverter 48 V144",
+    "voltage_class": "V144"
+   },
+   {
+    "cost_usd": 1240,
+    "eff_factor": 0.97,
+    "id": "IN-5",
+    "mass_kg": 11,
+    "max_cont_power_kw": 62,
+    "name": "Inverter 62 V144",
+    "voltage_class": "V144"
+   },
+   {
+    "cost_usd": 1090,
+    "eff_factor": 0.96,
+    "id": "IN-6",
+    "mass_kg": 10,
+    "max_cont_power_kw": 55,
+    "name": "Inverter 55 V96",
+    "voltage_class": "V96"
+   }
+  ],
+  "motor": [
+   {
+    "base_rpm": 3600,
+    "cont_torque_nm": 92,
+    "cost_usd": 1150,
+    "id": "MT-1",
+    "mass_kg": 34,
+    "max_rpm": 9000,
+    "name": "Drive 145 V96",
+    "peak_torque_nm": 145,
+    "voltage_class": "V96"
+   },
+   {
+    "base_rpm": 3400,
+    "cont_torque_nm": 118,
+    "cost_usd": 1480,
+    "id": "MT-2",
+    "mass_kg": 41,
+    "max_rpm": 8500,
+    "name": "Drive 190 V96",
+    "peak_torque_nm": 190,
+    "voltage_class": "V96"
+   },
+   {
+    "base_rpm": 3200,
+    "cont_torque_nm": 150,
+    "cost_usd": 1920,
+    "id": "MT-3",
+    "mass_kg": 52,
+    "max_rpm": 8300,
+    "name": "Drive 240 V96",
+    "peak_torque_nm": 240,
+    "voltage_class": "V96"
+   },
+   {
+    "base_rpm": 4300,
+    "cont_torque_nm": 121,
+    "cost_usd": 1390,
+    "id": "MT-4",
+    "mass_kg": 36,
+    "max_rpm": 10000,
+    "name": "Drive 170 V144",
+    "peak_torque_nm": 178,
+    "voltage_class": "V144"
+   },
+   {
+    "base_rpm": 4000,
+    "cont_torque_nm": 157,
+    "cost_usd": 1860,
+    "id": "MT-5",
+    "mass_kg": 47,
+    "max_rpm": 9560,
+    "name": "Drive 230 V144",
+    "peak_torque_nm": 230,
+    "voltage_class": "V144"
+   },
+   {
+    "base_rpm": 3700,
+    "cont_torque_nm": 196,
+    "cost_usd": 2450,
+    "id": "MT-6",
+    "mass_kg": 54,
+    "max_rpm": 9000,
+    "name": "Drive 300 V144",
+    "peak_torque_nm": 300,
+    "voltage_class": "V144"
+   },
+   {
+    "base_rpm": 4700,
+    "cont_torque_nm": 74,
+    "cost_usd": 980,
+    "id": "MT-7",
+    "mass_kg": 29,
+    "max_rpm": 11000,
+    "name": "Drive 120 V144",
+    "peak_torque_nm": 120,
+    "voltage_class": "V144"
+   },
+   {
+    "base_rpm": 3200,
+    "cont_torque_nm": 166,
+    "cost_usd": 2180,
+    "id": "MT-8",
+    "mass_kg": 58,
+    "max_rpm": 9300,
+    "name": "Drive 265 V96",
+    "peak_torque_nm": 265,
+    "voltage_class": "V96"
+   }
+  ],
+  "suspension": [
+   {
+    "cost_usd": 430,
+    "gross_capacity_kg": 1450,
+    "id": "SU-1",
+    "mass_kg": 38,
+    "name": "Suspension Std"
+   },
+   {
+    "cost_usd": 520,
+    "gross_capacity_kg": 1650,
+    "id": "SU-2",
+    "mass_kg": 47,
+    "name": "Suspension Plus"
+   },
+   {
+    "cost_usd": 660,
+    "gross_capacity_kg": 1900,
+    "id": "SU-3",
+    "mass_kg": 57,
+    "name": "Suspension HD"
+   },
+   {
+    "cost_usd": 360,
+    "gross_capacity_kg": 1300,
+    "id": "SU-4",
+    "mass_kg": 33,
+    "name": "Suspension Lite"
+   },
+   {
+    "cost_usd": 820,
+    "gross_capacity_kg": 2150,
+    "id": "SU-5",
+    "mass_kg": 66,
+    "name": "Suspension Max"
+   },
+   {
+    "cost_usd": 590,
+    "gross_capacity_kg": 1800,
+    "id": "SU-6",
+    "mass_kg": 53,
+    "name": "Suspension Cargo"
+   }
+  ],
+  "tires": [
+   {
+    "cost_usd_each": 96,
+    "crr": 0.011,
+    "id": "TR-1",
+    "load_rating_kg": 475,
+    "mass_kg_each": 8.5,
+    "name": "City 475/120",
+    "radius_m": 0.298,
+    "speed_rating_kmh": 120
+   },
+   {
+    "cost_usd_each": 118,
+    "crr": 0.01,
+    "id": "TR-2",
+    "load_rating_kg": 560,
+    "mass_kg_each": 9.4,
+    "name": "Tour 560/140",
+    "radius_m": 0.305,
+    "speed_rating_kmh": 140
+   },
+   {
+    "cost_usd_each": 142,
+    "crr": 0.01,
+    "id": "TR-3",
+    "load_rating_kg": 650,
+    "mass_kg_each": 10.6,
+    "name": "Haul 650/160",
+    "radius_m": 0.312,
+    "speed_rating_kmh": 160
+   },
+   {
+    "cost_usd_each": 78,
+    "crr": 0.012,
+    "id": "TR-4",
+    "load_rating_kg": 425,
+    "mass_kg_each": 7.6,
+    "name": "Eco 425/100",
+    "radius_m": 0.288,
+    "speed_rating_kmh": 100
+   },
+   {
+    "cost_usd_each": 168,
+    "crr": 0.009,
+    "id": "TR-5",
+    "load_rating_kg": 730,
+    "mass_kg_each": 12.1,
+    "name": "MaxLoad 730/130",
+    "radius_m": 0.322,
+    "speed_rating_kmh": 130
+   },
+   {
+    "cost_usd_each": 154,
+    "crr": 0.011,
+    "id": "TR-6",
+    "load_rating_kg": 515,
+    "mass_kg_each": 9.0,
+    "name": "Sport 515/180",
+    "radius_m": 0.301,
+    "speed_rating_kmh": 180
+   }
+  ]
+ }
+}

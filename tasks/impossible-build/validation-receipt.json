@@ -1,0 +1,206 @@
+{
+ "implementation_rubric_local": {
+  "command": "harbor check impossible-build -r docs/prompts/task-implementation.toml",
+  "reason": "Harbor runs the review as a claude-code trial inside a container; the container's claude CLI is not logged in (AgentAuthenticationError: 'Not logged in - Please run /login'). macOS stores the host Claude login in the Keychain, which does not transfer into containers. Unlock: `claude setup-token` on the Mac (one browser approval), then pass the token with --ae CLAUDE_CODE_OAUTH_TOKEN=... \u2014 subscription auth, no API billing. The hosted TB3 CI runs this review with org credentials, so this is a local pre-flight gap, not a submission blocker.",
+  "status": "blocked_locally"
+ },
+ "nop_validation": {
+  "command": "harbor run -p impossible-build --env docker --agent nop",
+  "exceptions": 0,
+  "job": "jobs/2026-10-14__23-07-40",
+  "mean_reward": 0.0,
+  "runtime": "39s",
+  "trials": 1
+ },
+ "oracle_validation": {
+  "command": "harbor run -p impossible-build --env docker --agent oracle",
+  "exceptions": 0,
+  "job": "jobs/2026-10-14__23-04-46",
+  "mean_reward": 1.0,
+  "runtime": "1m53s",
+  "trials": 1
+ },
+ "physics_v2": {
+  "bonus_trials_v2": {
+   "glm_5_3_cloud": {
+    "job": "ollama-glm53-v2",
+    "note": "implemented the full v2 spec faithfully, caught and fixed its own bilinear-interpolation edge bug mid-run",
+    "result": "PASS (reward 1.0, verifier 18 passed)",
+    "runtime": "8m13s",
+    "submitted": "CH-C/BT-6/MT-4/GB-3/IN-4/CL-4/TR-5/SU-1 (member of the 12 valids)",
+    "tokens": "462k in / 65.8k out (v1: 3m50s, 93k/20k)"
+   },
+   "gpt_oss_120b_cloud": {
+    "failed_checks": [
+     "top_speed_rpm",
+     "cooling",
+     "cooling_climb",
+     "range"
+    ],
+    "job": "ollama-gptoss-v2",
+    "note": "14/18 tests passed; missed exactly the interlocking v2 mechanisms",
+    "result": "FAIL (reward 0.0, genuine)",
+    "runtime": "1m23s",
+    "submitted": "CH-B/BT-2/MT-2/GB-4/IN-2/CL-2/TR-3/SU-2"
+   },
+   "verdict": "v2 splits the field (gpt-oss fails, GLM passes) but GLM-class faithful transcription + exhaustive search still wins; official Claude/Codex are at least GLM-class, so v2 is NOT submittable. V3 hardening directed: stateful thermal + SoC simulation over the route, a second (towing) load case, larger catalog \u2014 faithful implementation becomes stateful and staged search becomes mandatory."
+  },
+  "calibration": {
+   "diversity": "motors MT-3/MT-4/MT-5, batteries BT-3/BT-6/BT-7, chassis CH-A/CH-C/CH-F, both voltage families",
+   "full_receipt": "calibration-receipt.json",
+   "naive_trap_count": 132461,
+   "oracle_runtime_sec": 78,
+   "raw_combinations": 2540160,
+   "tightest_margin_pct": 0.19,
+   "valid_builds": 12,
+   "voltage_compatible": 635040
+  },
+  "independent_review_by_parent_agent": {
+   "byte_identical_files": "instruction.md and task.toml unchanged from v1 (tail bytes + key fields re-verified)",
+   "dual_implementation_agreement_spot_check": "355/355 builds agree (12 receipt valids + 300 seeded randoms + 43 single-part swaps), catalog copies in environment/ and tests/ byte-identical JSON",
+   "formula_spot_checks_vs_brief": "eta map table identical in solution/physics.py and tests/verify_physics.py (0.78/0.86/0.84; 0.84/0.91/0.89; 0.80/0.87/0.83); route segments (90,50,0),(25,40,6),(85,80,0),(10,30,12); cooling draw 0.15 + 0.06*capacity in both; envelope flat to base_rpm then rated*base_rpm/rpm in both; top-speed scan 60..180 step 1; 16 requirement checks exactly as briefed (incl. launch_accel, cooling_climb)",
+   "pytest_states_reproduced": "valid V144 build 18 passed; valid V96 build 18 passed; missing artifact 18 failed (nop semantics hold)"
+  },
+  "mac_validation": {
+   "nop": {
+    "exceptions": 0,
+    "job": "jobs/2026-10-15__00-44-42",
+    "mean_reward": 0.0,
+    "runtime": "35s"
+   },
+   "oracle": {
+    "exceptions": 0,
+    "job": "jobs/2026-10-15__00-41-17",
+    "mean_reward": 1.0,
+    "runtime": "3m14s"
+   },
+   "static_checks": "27 pass, 1 environment-limited (check-image-digests.sh, dockerfile-pin helper absent outside TB3 CI \u2014 same as v1; run on the VM against the byte-identical task folder because the Mac sparse clone is docs-only)",
+   "transfer": "chunked base64 (11 chunks) to ~/concord/run/tb3/impossible-build, sha256 27c2a0c5c0ec44aa32c45dd1d0d5a2f6e0435c7ffff6d80d0e18319b8ebb728e verified on the Mac; v1 copy preserved as impossible-build-v1-backup"
+  },
+  "status": "implemented + locally verified 2026-10-15; Mac re-validation PASSED 2026-10-15",
+  "why_v2": "both v1 bonus trials (GLM-5.3, gpt-oss:120b-cloud via Ollama) PASSED v1 in under 4 minutes by transcribing SPEC.md into a solver; v2 makes faithful implementation itself the hard part (torque envelopes, per-point efficiency map, duty-cycle range with worst-segment C-rate derating, closed cooling loop, axle-load tire check, load-dependent Crr, implicit top-speed solve, launch check). Design note: ../physics-v2-design.md"
+ },
+ "physics_v3": {
+  "bonus_trials_v3": {
+   "glm_5_3_cloud": {
+    "failed_checks": [
+     "tire_load",
+     "grade_torque",
+     "soc_floor",
+     "range"
+    ],
+    "job": "ollama-glm53-v3b (retry)",
+    "note": "14/18 tests passed; spent more tokens than its winning v2 run (591,648 in / 65,469 out vs 462k / 65.8k) and still missed dual-case tire load + grade torque and the route-sim energy pair. First attempt (job ollama-glm53-v3) never completed: one cloud request hung with zero agent activity for ~20 min (harbor process alive, TCP connections ESTABLISHED, no crash) and the run was cancelled at 28m06s; a probe immediately after answered in 3s, so the stall was transient. A cancelled/infra run is not a genuine trial and is not counted.",
+    "result": "FAIL (reward 0.0, genuine)",
+    "runtime": "15m12s",
+    "submitted": "CH-C/BT-5/MT-4/GB-2/IN-4/CL-2/TR-2/SU-4",
+    "tokens": "591,648 in / 65,469 out"
+   },
+   "gpt_oss_120b_cloud": {
+    "failed_checks": [
+     "grade_torque",
+     "soc_floor",
+     "range"
+    ],
+    "job": "ollama-gptoss-v3",
+    "note": "15/18 tests passed; passed the new thermal_peak and route_power checks, but the dual-case grade torque and the stateful route-sim energy pair (soc_floor + range) caught it",
+    "result": "FAIL (reward 0.0, genuine)",
+    "runtime": "2m27s",
+    "submitted": "CH-F/BT-5/MT-5/GB-2/IN-4/CL-4/TR-6/SU-2",
+    "tokens": "139,126 in / 9,812 out"
+   },
+   "verdict": "v3 holds against both bonus models: GLM-5.3, which passed v1 and v2, now fails genuinely, and gpt-oss fails again. Common failure spine in both v3 trials: soc_floor + range (stateful route energy accounting) and grade_torque (towing dual-case). v3 is the submission calibration; official Claude (x3 + cheat) and Codex (x3 + cheat) trials still to run on v3."
+  },
+  "builder_crosschecks": {
+   "oracle_valids_pass_verifier": "8/8",
+   "random_builds_agreement": "4000/4000",
+   "single_part_swaps_agreement": "376/376",
+   "stateless_survivors_agreement": "220/220 (87 decided only by the route simulation, so the transient model itself is cross-checked on non-trivial builds)"
+  },
+  "calibration": {
+   "budget_usd": 14200,
+   "builds_reaching_route_sim": 4474,
+   "diversity": "motors MT-5/MT-6/MT-8, batteries BT-3/BT-6, chassis CH-A/CH-F, both voltage families (6x V96, 2x V144, three islands)",
+   "full_receipt": "calibration-receipt.json",
+   "oracle_runtime": "8.4 s to first valid build (staged); 36.5 s full staged pass over all voltage-compatible combos; unstaged 1.44 ms/build (~1.9 h naive exhaustive)",
+   "raw_combinations": 4741632,
+   "tightest_margin_pct": 0.2,
+   "valid_builds": 8,
+   "voltage_compatible": 1185408
+  },
+  "independent_review_by_parent_agent": {
+   "byte_identical_files": "instruction.md and task.toml md5-identical to the v2 snapshot",
+   "catalog_md5": "155d03f00dba4feafacc457fe0273528 (environment/ and tests/ copies identical; equals the builder's locked calibration)",
+   "dual_implementation_agreement_spot_check": "300/300 builds agree (3 receipt valids + 250 seeded randoms + 47 single-part swaps; the swap set independently reproduced receipt valids #1/#2)",
+   "formula_spot_checks_vs_brief": "f_T derate (0.006/C over 90C, floor 0.70), radiator rejection capacity*clamp((T-35)/65,0,1), update T += (heat-rej)*dt/240, vf = 0.84+0.16*SoC_entering, SOC_FLOOR 0.10, cooling draw 0.15+0.06*capacity \u2014 identical in solution/physics.py and tests/verify_physics.py; trailer constants 450 kg / +0.35 CdA / +0.04 CG cap 0.65 in both; catalog requirements block: budget 14200, towing launch 1.6, towing top speed 105 \u2014 SPEC and calibration receipt agree",
+   "pytest_states_reproduced": "valid V96 build 18 passed; valid V144 build 18 passed; missing artifact 18 failed (nop semantics hold)"
+  },
+  "mac_validation": {
+   "nop": {
+    "exceptions": 0,
+    "job": "jobs/2026-10-15__02-51-08",
+    "mean_reward": 0.0,
+    "runtime": "31s"
+   },
+   "oracle": {
+    "exceptions": 0,
+    "job": "jobs/2026-10-15__02-50-09",
+    "mean_reward": 1.0,
+    "runtime": "44s"
+   },
+   "static_checks": "27 pass, 1 environment-limited (check-image-digests.sh, dockerfile-pin helper absent outside TB3 CI \u2014 same as v1/v2; run on the VM against the byte-identical task folder because the Mac sparse clone is docs-only)",
+   "transfer": "chunked base64 (15 chunks) to ~/concord/run/tb3/impossible-build, sha256 53b5c739b2173672e8b550468660796d26459d439c56e0ac77771b21cd29b3da verified on the Mac after install (SHA OK); v2 copy preserved as impossible-build-v2-backup. Three chunks (c001/c002/c004) were corrupted in the first transcription; per-slice (500-char) sha256 hashes localized them, re-transcription repaired them, and the full-tarball sha gate passed before extraction."
+  },
+  "mechanisms_added": [
+   "thermal state over route substeps: f_T = 1.0 (T<=90C) else max(0.70, 1-0.006*(T-90)) derates the continuous envelope; heat = P_elec - P_wheel; rejection = capacity * clamp((T-35)/65, 0, 1); T += (heat-rej)*dt/240 kJ/K; check thermal_peak T<=120C entering every substep and after the last",
+   "SoC + voltage sag: vf = 0.84 + 0.16*SoC_entering caps inverter power per substep (check route_power); SoC decrements after each substep against nameplate*0.90; check soc_floor final SoC >= 0.10; range derating uses worst SUBSTEP C-rate",
+   "towing dual-case checks: grade_torque, grade_power, launch_accel, tire_load, top_speed_rpm, top_speed_power; route sim and grade_battery_c stay solo-only; grade/top-speed/launch stay stateless cold checks",
+   "check list stays exactly 16: cooling + cooling_climb replaced by thermal_peak/route_power/soc_floor; top_speed_torque merged into top_speed_power"
+  ],
+  "naive_trap_counts": {
+   "datasheet_naive_definition": "the v1/v2 receipts' definition: nameplate torques, constant eta 0.92, aux fixed 0.4 kW, tire load gross/4 vs nominal rating, raw Crr, cruise-only range, static cooling comparisons; it accepts 308,401 builds incl. the 8 valids",
+   "datasheet_naive_headline": 308393,
+   "decision": "parent agent accepted the datasheet-naive headline (308,393) with the literal count and its structural explanation reported alongside: the trap figure is an internal calibration metric, not a TB3 gate (CI gates are static checks, rubric, Docker build, oracle pass, nop fail, and genuine agent trial failures); both numbers are documented transparently; the empirical difficulty gate is the bonus/official trials.",
+   "literal_v2_physics": 0,
+   "literal_v2_physics_note": "measured with the literal v2 stateless evaluator (its own 16 checks) on the v3 catalog: it accepts ZERO builds. All 8 v3 winners fail v2's static cooling pair (they run the 2.6 kW CL-1 radiator, which the transient sim legitimizes via thermal mass but the static grade-point heat comparison rejects), and only 673 builds pass every other v2 check (the shared range wall rejects 94.3% first). Two re-calibration rounds aimed at the literal definition reached only 774 / 1,303 traps while destabilizing the valid count (8 -> 80 -> 19): the towing gate leaks ~6% of any fattened stateless region into v3 validity, so >=100k literal v2-physics traps are structurally incompatible with 3-8 v3 valids on this catalog family. Locked catalog restored unchanged (md5 155d03f00dba4feafacc457fe0273528) and re-verified."
+  },
+  "status": "implemented + locally verified 2026-10-15; Mac validation PASSED 2026-10-15; bonus trials: both models genuinely FAIL",
+  "why_v3": "GLM-5.3 passed v2 in 8m13s by faithful transcription of SPEC.md + exhaustive search over 2.54M combos; gpt-oss failed. Stateless per-point physics, however interlocked, is a transcription task. V3 changes the kind of difficulty: (1) stateful route simulation \u2014 coolant temperature and battery SoC evolve over 210 one-km substeps and feed back into every later substep (thermal derating of the continuous envelope; voltage sag shrinking the inverter cap), so errors compound and cannot be spot-checked; (2) a towing load case (+450 kg, +0.35 CdA, +0.04 rear CG capped 0.65) re-evaluates grade torque/power, launch (1.6 vs 2.2 m/s^2), tire load and both top-speed checks (105 vs 125 km/h) \u2014 a build must close in two vehicles at once; (3) a full unstaged evaluation costs ~1.44 ms/build, so naive exhaustive search over 4,741,632 combos takes ~1.9 h (the whole agent window) \u2014 staged pruning is mandatory. Both v2 trial submissions fail v3 (GLM's winner: budget + towing grade_torque; gpt-oss's pick: 5 checks). Design note: ../physics-v3-design.md"
+ },
+ "static_checks": {
+  "fixes_applied_during_s4": [
+   "task.toml restructured to the live docs/task-template.toml shape: full [environment] block (build_timeout_sec, storage_mb, gpus, network_mode), no allow_internet key",
+   "category/subcategory reconciled against docs/TAXONOMY.yaml: Science / Physics (Hardware offers only CAD and RTL subareas; the task's primary skill is numerical modeling of a physical system). Subcategory is an open set per check-task-fields.sh.",
+   "README.md gained the required ## Task Metadata section, generated from task.toml exactly as check-task-fields.sh derives it (Author, Category, Tags, Expert time, Agent timeout, CPUs, Memory)"
+  ],
+  "limited": "check-image-digests.sh exits 127 locally: helper binary `dockerfile-pin` exists in TB3 CI but is not installed on the dev machine. Both Dockerfiles pin the base image by sha256 digest, verified manually against the Docker Hub API digest for python:3.13-slim.",
+  "result": "27 pass, 1 environment-limited"
+ },
+ "task": "terminal-bench/impossible-build",
+ "trial_model_ids": {
+  "claude_code": {
+   "agent": "claude-code",
+   "env": {
+    "CLAUDE_CODE_MAX_OUTPUT_TOKENS": "128000"
+   },
+   "model": "anthropic/claude-fable-5-1",
+   "reasoning_effort": "max"
+  },
+  "codex": {
+   "agent": "codex",
+   "model": "openai/gpt-6-astra",
+   "reasoning_effort": "xhigh"
+  },
+  "conflict_note": "The Klavis assignment doc names a different model pair ('gpt 6.1 sol / opus 5.5'); those IDs appear in no upstream TB3 defaults file. Per the assignment's own rule (TB3 docs are the source of truth on conflict), trials will use the upstream defaults above, and the discrepancy will be flagged in the submission README.",
+  "source": ".github/harbor-run-defaults.yml @ da52319 (read live 2026-10-14)",
+  "trials_per_agent": 3
+ },
+ "upstream": {
+  "commit": "da523194b9e7dd51229b3c6a8fc0e941b3753896",
+  "docker": "29.5.2 via Colima; Docker Compose 5.4.0 (cliPluginsExtraDirs fix applied to ~/.docker/config.json \u2014 compose plugin was installed via Homebrew but not registered)",
+  "harbor_version": "0.24.0",
+  "repo": "harbor-framework/terminal-bench"
+ },
+ "v1_validation_note": "The oracle_validation, nop_validation, static_checks and implementation_rubric_local entries below are the V1 results (2026-10-14). They will be replaced by v2 Mac results after re-validation; v1 bonus-trial outcomes (both models passed) are recorded in the night-watch state file and the submission failure analysis.",
+ "validated": "2026-10-14 (America/New_York)"
+}

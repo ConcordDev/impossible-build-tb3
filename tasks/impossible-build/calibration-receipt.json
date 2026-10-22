@@ -1,0 +1,336 @@
+{
+ "builds_reaching_route_sim": 4474,
+ "catalog": {
+  "parts_per_slot": {
+   "battery": 8,
+   "chassis": 7,
+   "cooling": 7,
+   "gearbox": 7,
+   "inverter": 6,
+   "motor": 8,
+   "suspension": 6,
+   "tires": 6
+  },
+  "raw_combinations": 4741632,
+  "total_parts": 55,
+  "voltage_compatible_combinations": 1185408
+ },
+ "diversity": {
+  "batteries": [
+   "BT-3",
+   "BT-6"
+  ],
+  "chassis": [
+   "CH-A",
+   "CH-F"
+  ],
+  "motors": [
+   "MT-5",
+   "MT-6",
+   "MT-8"
+  ],
+  "voltage_families": [
+   "V144",
+   "V96"
+  ]
+ },
+ "failure_map_full_evaluation": {
+  "budget": 341749,
+  "gearbox_torque": 127008,
+  "grade_power": 429832,
+  "grade_torque": 825344,
+  "gross_mass": 61329,
+  "launch_accel": 95526,
+  "range": 1115668,
+  "route_power": 19805,
+  "soc_floor": 1126518,
+  "suspension_capacity": 94260,
+  "thermal_peak": 224494,
+  "tire_load": 723652,
+  "top_speed_power": 662097,
+  "top_speed_rpm": 631512
+ },
+ "failure_map_note": "Full (unstaged) evaluation of all 1,185,408 voltage-compatible combinations; a build is counted under every check it fails. voltage_match cannot fail inside this population by construction, and grade_battery_c records zero failures on this catalog (structurally slack: the grade point's C-rate stays under every pack's limit), so both are omitted from the map.",
+ "model_constants": {
+  "coolant_initial_c": 35.0,
+  "coolant_limit_c": 120.0,
+  "radiator_full_rejection_delta_c": 65.0,
+  "route_segments_km_speed_grade": [
+   [
+    90,
+    50,
+    0
+   ],
+   [
+    25,
+    40,
+    6
+   ],
+   [
+    85,
+    80,
+    0
+   ],
+   [
+    10,
+    30,
+    12
+   ]
+  ],
+  "route_substeps": 210,
+  "soc_floor": 0.1,
+  "soc_initial": 1.0,
+  "substep_km": 1,
+  "thermal_derate_floor": 0.7,
+  "thermal_derate_per_c": 0.006,
+  "thermal_derate_start_c": 90.0,
+  "thermal_mass_kj_per_k": 240.0,
+  "trailer_cda_delta_m2": 0.35,
+  "trailer_cg_rear_cap": 0.65,
+  "trailer_cg_rear_delta": 0.04,
+  "trailer_mass_kg": 450,
+  "voltage_sag": "vf = 0.84 + 0.16 * soc_entering"
+ },
+ "naive_trap_count": 308393,
+ "naive_trap_definition": "Datasheet-naive evaluation (the v1/v2 receipts' definition): peak (nameplate) torque for sustained checks, constant eta 0.92, aux fixed 0.4 kW (cooling draw ignored), tire load gross/4 vs nominal rating, raw Crr, single-point 50 km/h cruise range with no C-rate derating, static cooling heat comparisons. It accepts 308,401 builds on this catalog; 308,393 are rejected by the v3 verifier (the remaining 8 are the valid builds).",
+ "oracle_runtime": {
+  "full_staged_pass_seconds": 36.5,
+  "note": "A naive unstaged exhaustive search over the raw catalog would take ~1.9 hours; the staged oracle is bounded by the full staged pass (~37 s).",
+  "solve_py_first_valid_seconds": 8.4,
+  "unstaged_full_evaluation_per_build_ms": 1.44
+ },
+ "physics_version": "v3 (stateful thermal + SoC route simulation, towing load case)",
+ "prior_version_outcome": "v2 (stateless) was solved by GLM-5.3 in 8m13s by faithful transcription + exhaustive search. Its winning build fails v3 on budget and towing grade_torque; the build gpt-oss submitted against v2 fails v3 on 5 checks.",
+ "pytest_states": {
+  "extra_key_artifact": "1 failed (schema), 17 passed",
+  "missing_artifact": "18 failed",
+  "plausible_wrong_build": "5 failed, 13 passed (the gpt-oss v2 trial submission)",
+  "valid_build_v144": "18 passed",
+  "valid_build_v96": "18 passed"
+ },
+ "requirements": {
+  "grade_percent": 24,
+  "grade_speed_kmh": 25,
+  "max_gross_mass_kg": 1420,
+  "max_total_cost_usd": 14200,
+  "min_launch_accel_ms2": 2.2,
+  "min_launch_accel_towing_ms2": 1.6,
+  "min_range_km": 232,
+  "min_top_speed_kmh": 125,
+  "min_top_speed_towing_kmh": 105
+ },
+ "schema_version": 1,
+ "staged_first_failure_histogram": {
+  "budget": 233201,
+  "gearbox_torque": 80233,
+  "grade_power": 82784,
+  "grade_torque": 427705,
+  "gross_mass": 61329,
+  "launch_accel": 62588,
+  "soc_floor": 3674,
+  "suspension_capacity": 89466,
+  "thermal_peak": 792,
+  "tire_load": 6335,
+  "top_speed_rpm": 137293
+ },
+ "staged_note": "First failing stage per build under the oracle's staged evaluation order; only builds passing every stateless stage reach the route simulation.",
+ "task": "impossible-build",
+ "tightest_winning_margin_pct": 0.2,
+ "trap_investigation": "Post-lock: the brief's literal v2-physics trap definition measured 0 (see v2_physics_trap_note); two repair rounds reached 774 / 1,303 traps at the cost of the valid count (80 / 19, second round V144-only); the catalog was reverted to the locked md5 and re-verified (8 valids, staged histogram identical), and the datasheet-naive count (308,393) was measured with the v1/v2 receipts' naive definition.",
+ "tuning_path": [
+  "Round 0 (budget $15,190, v2 parts rescaled + 4 new parts): exactly 1 valid build; the route sim's energy checks (soc_floor/range) formed the wall \u2014 1,990 of 1,992 sim-reachers failed soc_floor.",
+  "Near-miss analysis: the V144 islands died on towing grade torque; the V96 family had NO path (best gearing failed towing grade torque by 24.7%, the high-ratio alternative failed top_speed_rpm) \u2014 a gearing scissors created by the towing case.",
+  "Round 1: BT-6 enlarged 43.5 -> 45.0 kWh, MT-5 continuous torque 148 -> 162 Nm, new V96 motor MT-8 authored strong: overshot to 94 valid builds (V96 22 / V144 72) with sub-0.15% knife-edge margins.",
+  "Round 2: MT-5 trimmed to 154, MT-8 to 164 Nm / 9000 rpm: both new islands collapsed; 20 valids, all MT-6 \u2014 trims re-opened halfway in round 3 (MT-5 158, MT-8 168/9300, BT-6 44.2 kWh): 28 valids, correct diversity skeleton.",
+  "Round 4: HD suspensions made honestly heavier (SU-2/3/5/6 +4..6 kg) to discipline near-free suspension swaps, MT-8 166, MT-5 157: 15 valids.",
+  "Final lock: MT-5 max_rpm 9500 -> 9560 (its sole surviving build was rpm-limited at exactly 125 km/h; it now achieves 126 with a 0.8% margin) and budget re-locked $15,190 -> $14,200: exactly 8 valid builds, tightest winning margin 0.20% (budget), both voltage families, 3 motors, 2 batteries, 2 chassis."
+ ],
+ "v2_physics_trap_count": 0,
+ "v2_physics_trap_note": "Measured with the literal v2 physics evaluator (its own 16 checks, stateless, solo-only): it accepts ZERO builds on this catalog. All 8 v3 winners fail its static cooling pair (they run the 2.6 kW CL-1 radiator, which the v3 transient sim legitimizes but the static grade-point heat comparison rejects), and only 673 builds pass every other v2 check (the range wall shared by both models rejects 94.3%). Two re-calibration rounds aimed at the literal definition reached only 774 and 1,303 v2-accepted traps while destabilizing the v3 valid count (8 -> 80 -> 19); the towing gate leaks ~6% of any fattened stateless region into v3 validity, so >=100,000 literal v2-physics traps are structurally incompatible with 3-8 v3 valid builds on this catalog family. The locked calibration was restored unchanged.",
+ "valid_build_count": 8,
+ "valid_builds": [
+  {
+   "achieved_top_speed_kmh": 126,
+   "achieved_top_speed_towing_kmh": 124,
+   "build": {
+    "battery": "BT-3",
+    "chassis": "CH-A",
+    "cooling": "CL-1",
+    "gearbox": "GB-6",
+    "inverter": "IN-2",
+    "motor": "MT-8",
+    "suspension": "SU-1",
+    "tires": "TR-5"
+   },
+   "cost_usd": 14082,
+   "gross_kg": 1346.4,
+   "peak_coolant_temp_c": 113.8,
+   "range_km": 237.2,
+   "soc_at_route_end": 0.115,
+   "tightest_check": "top_speed_power",
+   "tightest_margin_pct": 0.8,
+   "worst_substep_c_rate": 0.448
+  },
+  {
+   "achieved_top_speed_kmh": 126,
+   "achieved_top_speed_towing_kmh": 124,
+   "build": {
+    "battery": "BT-3",
+    "chassis": "CH-A",
+    "cooling": "CL-1",
+    "gearbox": "GB-6",
+    "inverter": "IN-2",
+    "motor": "MT-8",
+    "suspension": "SU-2",
+    "tires": "TR-5"
+   },
+   "cost_usd": 14172,
+   "gross_kg": 1355.4,
+   "peak_coolant_temp_c": 114.0,
+   "range_km": 236.2,
+   "soc_at_route_end": 0.111,
+   "tightest_check": "budget",
+   "tightest_margin_pct": 0.2,
+   "worst_substep_c_rate": 0.451
+  },
+  {
+   "achieved_top_speed_kmh": 126,
+   "achieved_top_speed_towing_kmh": 124,
+   "build": {
+    "battery": "BT-3",
+    "chassis": "CH-F",
+    "cooling": "CL-1",
+    "gearbox": "GB-6",
+    "inverter": "IN-2",
+    "motor": "MT-8",
+    "suspension": "SU-1",
+    "tires": "TR-5"
+   },
+   "cost_usd": 13932,
+   "gross_kg": 1332.4,
+   "peak_coolant_temp_c": 114.0,
+   "range_km": 236.8,
+   "soc_at_route_end": 0.113,
+   "tightest_check": "top_speed_power",
+   "tightest_margin_pct": 0.8,
+   "worst_substep_c_rate": 0.444
+  },
+  {
+   "achieved_top_speed_kmh": 126,
+   "achieved_top_speed_towing_kmh": 124,
+   "build": {
+    "battery": "BT-3",
+    "chassis": "CH-F",
+    "cooling": "CL-1",
+    "gearbox": "GB-6",
+    "inverter": "IN-2",
+    "motor": "MT-8",
+    "suspension": "SU-2",
+    "tires": "TR-5"
+   },
+   "cost_usd": 14022,
+   "gross_kg": 1341.4,
+   "peak_coolant_temp_c": 114.2,
+   "range_km": 235.8,
+   "soc_at_route_end": 0.109,
+   "tightest_check": "top_speed_power",
+   "tightest_margin_pct": 0.8,
+   "worst_substep_c_rate": 0.447
+  },
+  {
+   "achieved_top_speed_kmh": 126,
+   "achieved_top_speed_towing_kmh": 124,
+   "build": {
+    "battery": "BT-3",
+    "chassis": "CH-F",
+    "cooling": "CL-1",
+    "gearbox": "GB-6",
+    "inverter": "IN-2",
+    "motor": "MT-8",
+    "suspension": "SU-3",
+    "tires": "TR-5"
+   },
+   "cost_usd": 14162,
+   "gross_kg": 1351.4,
+   "peak_coolant_temp_c": 114.5,
+   "range_km": 234.6,
+   "soc_at_route_end": 0.105,
+   "tightest_check": "budget",
+   "tightest_margin_pct": 0.27,
+   "worst_substep_c_rate": 0.449
+  },
+  {
+   "achieved_top_speed_kmh": 126,
+   "achieved_top_speed_towing_kmh": 124,
+   "build": {
+    "battery": "BT-3",
+    "chassis": "CH-F",
+    "cooling": "CL-1",
+    "gearbox": "GB-6",
+    "inverter": "IN-2",
+    "motor": "MT-8",
+    "suspension": "SU-6",
+    "tires": "TR-5"
+   },
+   "cost_usd": 14092,
+   "gross_kg": 1347.4,
+   "peak_coolant_temp_c": 114.4,
+   "range_km": 235.1,
+   "soc_at_route_end": 0.107,
+   "tightest_check": "budget",
+   "tightest_margin_pct": 0.76,
+   "worst_substep_c_rate": 0.448
+  },
+  {
+   "achieved_top_speed_kmh": 135,
+   "achieved_top_speed_towing_kmh": 131,
+   "build": {
+    "battery": "BT-6",
+    "chassis": "CH-F",
+    "cooling": "CL-1",
+    "gearbox": "GB-2",
+    "inverter": "IN-4",
+    "motor": "MT-6",
+    "suspension": "SU-1",
+    "tires": "TR-3"
+   },
+   "cost_usd": 14108,
+   "gross_kg": 1314.4,
+   "peak_coolant_temp_c": 113.2,
+   "range_km": 233.8,
+   "soc_at_route_end": 0.102,
+   "tightest_check": "budget",
+   "tightest_margin_pct": 0.65,
+   "worst_substep_c_rate": 0.44
+  },
+  {
+   "achieved_top_speed_kmh": 126,
+   "achieved_top_speed_towing_kmh": 126,
+   "build": {
+    "battery": "BT-6",
+    "chassis": "CH-F",
+    "cooling": "CL-1",
+    "gearbox": "GB-6",
+    "inverter": "IN-4",
+    "motor": "MT-5",
+    "suspension": "SU-1",
+    "tires": "TR-3"
+   },
+   "cost_usd": 13648,
+   "gross_kg": 1310.4,
+   "peak_coolant_temp_c": 111.9,
+   "range_km": 235.2,
+   "soc_at_route_end": 0.107,
+   "tightest_check": "grade_torque",
+   "tightest_margin_pct": 0.3,
+   "worst_substep_c_rate": 0.434
+  }
+ ],
+ "verifier_crosschecks": {
+  "full_evaluation_valid_count_matches_staged": true,
+  "oracle_valid_builds_passing_verifier": "8/8",
+  "random_builds_agreement": "4000/4000",
+  "single_part_swaps_agreement": "376/376",
+  "stateless_survivors_agreement": "220/220 (87 decided only by the route simulation)"
+ }
+}
