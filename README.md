@@ -3,13 +3,12 @@
 Author: Ramaj Duncan · Task: `terminal-bench/impossible-build`
 Assignment: Klavis AI take-home (Xiangkai Zeng), due **Wed Oct 21, 2026, ~5:13 PM ET**.
 
-> STATUS (2026-10-20): Task is final (physics v3) and Mac-validated.
-> Official agent trials are the only remaining evidence — see TRIALS.md
-> for the Oct 20 status: both trial sets are subscription-blocked until
-> Thu/Fri Oct 22–23, and Xiangkai Zeng was notified on Oct 20 with the
-> choice of a Wed submission with trial rows pending or a held,
-> complete submission. This repo is a local pre-assembly; it has NOT
-> been pushed or submitted.
+> STATUS (2026-10-22): Task is final (physics v3) and Mac-validated.
+> Submitted to Klavis AI (Xiangkai Zeng) on Thu Oct 22, 2026 with
+> official agent trials honestly pending — see TRIALS.md: both trial
+> sets are subscription-gated (Claude resets Thu Oct 22, Codex starts
+> Fri Oct 23), and trial results will be pushed to this repo and the
+> submission thread by the weekend.
 
 ## The task
 
